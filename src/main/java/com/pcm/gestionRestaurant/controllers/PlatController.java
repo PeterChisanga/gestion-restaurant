@@ -4,6 +4,7 @@ import com.pcm.gestionRestaurant.models.*;
 import com.pcm.gestionRestaurant.services.CommandeRepository;
 import com.pcm.gestionRestaurant.services.PlatRepository;
 import com.pcm.gestionRestaurant.services.PlatService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +33,13 @@ public class PlatController {
     private CommandeRepository repoCommande;
 
     @GetMapping({"", "/"})
-    public String showEmployesList(Model model) {
-        List<Plat> plats = repo.findAll();
+    public String showPlatsList(Model model, HttpSession session) {
+        Integer restaurantId = (Integer) session.getAttribute("restaurantId");
+        if (restaurantId == null) {
+            return "redirect:/employes/login"; // Redirect to login if session attribute is missing
+        }
+
+        List<Plat> plats = repo.findByRestaurantId(restaurantId);
         model.addAttribute("plats", plats);
         return "plats/index";
     }
@@ -46,9 +52,9 @@ public class PlatController {
     }
 
     @PostMapping("/create")
-    public String createPlat(PlatDto platDto, @RequestParam("image") MultipartFile imageFile, Model model) {
+    public String createPlat(PlatDto platDto, @RequestParam("image") MultipartFile imageFile,HttpSession session, Model model) {
         try {
-            platService.savePlat(platDto, imageFile);
+            platService.savePlat(platDto, imageFile,session);
             return "redirect:/plats";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

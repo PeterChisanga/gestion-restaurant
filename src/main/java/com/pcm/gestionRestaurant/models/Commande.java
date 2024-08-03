@@ -27,15 +27,28 @@ public class Commande {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
     public Commande() {
         this.createdAt = new Date();
     }
 
-    public Commande(Client client, Plat plat, double montantTotal) {
+    public Commande(Client client, Plat plat, double montantTotal,Restaurant restaurant) {
         this.client = client;
         this.plat = plat;
         this.montantTotal = montantTotal;
         this.createdAt = new Date();
+        this.restaurant = restaurant;
     }
 
     public int getId() {

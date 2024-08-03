@@ -2,7 +2,9 @@ package com.pcm.gestionRestaurant.services;
 
 import com.pcm.gestionRestaurant.models.Plat;
 import com.pcm.gestionRestaurant.models.PlatDto;
+import com.pcm.gestionRestaurant.models.Restaurant;
 import com.pcm.gestionRestaurant.services.PlatRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +21,7 @@ public class PlatService {
     @Autowired
     private PlatRepository platRepository;
 
-    public Plat savePlat(PlatDto platDto, MultipartFile imageFile) throws IOException {
+    public Plat savePlat(PlatDto platDto, MultipartFile imageFile, HttpSession session) throws IOException {
 
         if (platDto.getNom() == null || platDto.getNom().isEmpty()) {
             throw new IllegalArgumentException("Le nom est obligatoire.");
@@ -28,6 +30,11 @@ public class PlatService {
             throw new IllegalArgumentException("Le prix est obligatoire et doit être supérieur à 0.");
         }
 
+        Integer restaurantId = (Integer) session.getAttribute("restaurantId");
+
+        Restaurant restaurant = new Restaurant();
+        restaurant.setId(restaurantId);
+
         String imageUrl = saveImage(imageFile);
 
         Plat plat = new Plat();
@@ -35,6 +42,7 @@ public class PlatService {
         plat.setPrix(platDto.getPrix());
         plat.setDescription(platDto.getDescription());
         plat.setImage(imageUrl);
+        plat.setRestaurant(restaurant);
 
         return platRepository.save(plat);
     }

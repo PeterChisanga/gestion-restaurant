@@ -13,6 +13,18 @@ public class Client {
     @Column(nullable = false)
     private String nom;
 
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
     public Client() {}
 
     public Client(String nom) {

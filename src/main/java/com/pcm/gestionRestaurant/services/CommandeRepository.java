@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface CommandeRepository extends JpaRepository<Commande, Integer> {
     List<Commande> findByPlat(Plat plat);
+
+    List<Commande> findByRestaurantId(int restaurantId);
 }

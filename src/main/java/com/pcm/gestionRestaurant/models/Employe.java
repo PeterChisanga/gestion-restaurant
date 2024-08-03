@@ -23,6 +23,10 @@ public class Employe {
     @Column(name = "created_at", nullable = false,columnDefinition = "TIMESTAMP")
     private Date createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
     public Employe() {
         this.createdAt = new Date();
     }
@@ -72,5 +76,13 @@ public class Employe {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }
